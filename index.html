@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Horoscope App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <h1>Horoscope App</h1>
+    <form id="horoscope-form">
+        <label for="birthdate">Enter your birthdate:</label>
+        <input type="date" id="birthdate" name="birthdate">
+        <button type="submit">Get Horoscope</button>
+    </form>
+    <p id="horoscope-result"></p>
+
+    <script>
+        document.getElementById('horoscope-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const birthdate = document.getElementById('birthdate').value;
+            fetch(`http://localhost:3000/signHoroscope?date=${birthdate}`)
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => Promise.reject(err));
+                }
+                return response.json()
+            })
+            .then(data => {
+                document.getElementById('horoscope-result').textContent = 'Your zodiac sign is ' + data.sign;
+            })
+            .catch(error => {
+                document.getElementById('horoscope-result').textContent = 'Error: ' + error.error;
+            });
+        });
+    </script>
+</body>
+</html>
